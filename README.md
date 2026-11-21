@@ -5,7 +5,7 @@ gRPC service wrapping Google OR-Tools CP-SAT for the BUILD/POLISH scheduler.
 production is `placementSolver` from `@seazn/scheduler` (`packages/scheduler/src/solver.ts`);
 that adapter calls the service through `placement-client.ts`, the TS
 anti-corruption layer in the same package — see
-[`docs/superpowers/specs/2026-08-07-placement-scheduler-design.md`](https://github.com/onryde/seazn.club/blob/placement-split-base/docs/superpowers/specs/2026-08-07-placement-scheduler-design.md)
+[`docs/superpowers/specs/2026-08-07-placement-scheduler-design.md`](https://github.com/seazn-club/seazn.club/blob/placement-split-base/docs/superpowers/specs/2026-08-07-placement-scheduler-design.md)
 for the design and [`DEPLOY.md`](./DEPLOY.md) for the production runbook.
 [`bench/README.md`](./bench/README.md) covers the offline sweep this
 service's own board generator (`bench/placement_bench_boards.py`) is shared with.

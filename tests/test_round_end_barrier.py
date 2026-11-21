@@ -1,7 +1,7 @@
 """X-SW-31 (W3 Swiss): the round END barrier.
 
 The contract is the engine's, not this repo's: `solver-port.ts`'s
-`SolveBuildInput.fixtures[].roundBarrier` doc comment (onryde/seazn.club.engine,
+`SolveBuildInput.fixtures[].roundBarrier` doc comment (seazn-club/seazn.club.engine,
 `src/scheduling/solver-port.ts`), and its verifier `roundOrderConflicts`, kind
 `round_order_end`, in `src/scheduling/calendar.ts`. In short:
 

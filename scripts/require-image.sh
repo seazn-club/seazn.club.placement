@@ -3,7 +3,7 @@
 #
 #   scripts/require-image.sh <image>
 #
-#   <image>  ghcr.io/onryde/seazn-placement:<40-hex lowercase commit sha>
+#   <image>  ghcr.io/seazn-club/seazn-placement:<40-hex lowercase commit sha>
 #
 # A deploy ships the image `ci.yml` tested and published; it never builds one. So
 # before `flyctl deploy --image`, the registry is asked whether that exact tag
@@ -25,8 +25,8 @@ if [ "$#" -ne 1 ] || [ -z "$1" ]; then
 fi
 image="$1"
 
-if [[ ! "$image" =~ ^ghcr\.io/onryde/seazn-placement:[0-9a-f]{40}$ ]]; then
-  echo "::error::'$image' is not ghcr.io/onryde/seazn-placement:<40-hex commit sha>. Deploys ship an immutable sha tag, never latest, a branch or an empty tag."
+if [[ ! "$image" =~ ^ghcr\.io/seazn-club/seazn-placement:[0-9a-f]{40}$ ]]; then
+  echo "::error::'$image' is not ghcr.io/seazn-club/seazn-placement:<40-hex commit sha>. Deploys ship an immutable sha tag, never latest, a branch or an empty tag."
   exit 1
 fi
 

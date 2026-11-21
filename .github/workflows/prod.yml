@@ -7,7 +7,7 @@ name: prod
 # seazn.club's release tag no longer deploys it.
 #
 # The tag does not run ci.yml, so a tag alone proves nothing about the commit. What
-# proves it is the image: ci.yml publishes ghcr.io/onryde/seazn-placement:<sha> only
+# proves it is the image: ci.yml publishes ghcr.io/seazn-club/seazn-placement:<sha> only
 # on a push to main, after test, docker and buf-breaking have all passed, and the
 # image is the very one the docker job tested. So the first thing this job does is
 # require that image for the tagged commit and FAIL if there is none (a tag on a
@@ -56,7 +56,7 @@ jobs:
       cancel-in-progress: false
     env:
       # On a tag push github.sha is the tagged commit.
-      IMAGE: ghcr.io/onryde/seazn-placement:${{ github.sha }}
+      IMAGE: ghcr.io/seazn-club/seazn-placement:${{ github.sha }}
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:

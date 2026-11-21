@@ -1,7 +1,7 @@
 # seazn.club.placement
 
 The CP-SAT placement gRPC service (Python 3.14, OR-Tools). It is consumed only
-by `onryde/seazn.club`'s `packages/scheduler`, over Fly private networking
+by `seazn-club/seazn.club`'s `packages/scheduler`, over Fly private networking
 (`placement-prod.flycast:50051`). It is an internal service: never reachable from the
 public internet. The repo and its one image are public, because nothing in
 either is secret; "internal" governs the network, not visibility.
@@ -11,7 +11,7 @@ Layout, all at the repo root: `Dockerfile`, `fly.toml`, `pyproject.toml`,
 
 ## History
 
-Pre-cutover history lives in onryde/seazn.club:
+Pre-cutover history lives in seazn-club/seazn.club:
 `git log placement-split-base -- services/placement proto` (tag at
 `093ad1d19ef068950e72571309320e5861dd3255`). This repo starts with one import
 commit and is never rewritten.
@@ -46,7 +46,7 @@ The order for a contract change is:
 - prod (`placement-prod`, `prod.yml`) deploys the tagged commit's published image on a
   `v*.*.*` tag, and fails if there is none.
 - Neither rebuilds. The only artifact is the public image
-  `ghcr.io/onryde/seazn-placement:<sha>`, published by `ci.yml` from `main`. Tags are
+  `ghcr.io/seazn-club/seazn-placement:<sha>`, published by `ci.yml` from `main`. Tags are
   immutable commit shas: no `latest`, no `main`.
 - The only GitHub secret is `FLY_TOKEN`. `PLACEMENT_SERVICE_SECRET` is a Fly secret,
   set by hand on the Fly apps (DEPLOY.md §4); no workflow reads it.

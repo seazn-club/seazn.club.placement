@@ -119,13 +119,13 @@ package is *created*; it grants nothing on one that already exists. So a denial 
 (for example it was first created from another repository). Look at it:
 
 ```bash
-gh api orgs/onryde/packages/container/seazn-placement   # needs the read:packages scope
+gh api orgs/seazn-club/packages/container/seazn-placement   # needs the read:packages scope
 ```
 
 `repository` names the source repository the package is linked to (the UI's *Repository
-source*) and `visibility` should read `public`. Today `repository` reads
-`onryde/seazn.club.placement`: the package was deleted and recreated on 2026-10-25, by this
-repository's own `publish` job, so it carries this repository as its source. If `repository`
+source*) and `visibility` should read `public`. `repository` should read
+`seazn-club/seazn.club.placement`: this repository's own `publish` job creates the package,
+so it carries this repository as its source. If `repository`
 ever names another repository, the package was created from there and Actions access to it
 must be granted by hand. Do that in the package's settings (GitHub: Packages,
 `seazn-placement`, Package settings):
@@ -135,6 +135,14 @@ must be granted by hand. Do that in the package's settings (GitHub: Packages,
 3. Check that the visibility is *Public* (step 2 above).
 
 Then re-run the failed `ci` run; nothing in the repository needs to change.
+
+**History.** The package was first `ghcr.io/onryde/seazn-placement`. It was deleted and
+recreated on 2026-10-25, by this repository's own `publish` job. In November 2026 the
+repository moved to the `seazn-club` org, and GitHub cannot transfer a package between
+owners, so `publish` creates a new package, `ghcr.io/seazn-club/seazn-placement`, on its
+first run after the move. GitHub creates it private, so step 2 above applies to it again.
+A commit published before the move has its image only in the old package, which stays
+until the cutover and is then deleted.
 
 ## 4b. Staging gets its OWN service, `placement-stg` (owner decision 2026-08-11)
 
@@ -268,7 +276,7 @@ and there would be no window to validate anything in.
 
 So a contract revision goes:
 
-1. Merge the PR. `ci` publishes `ghcr.io/onryde/seazn-placement:<commit sha>` and
+1. Merge the PR. `ci` publishes `ghcr.io/seazn-club/seazn-placement:<commit sha>` and
    `stg.yml` deploys that image to `placement-stg`.
 2. Exercise it on `stg.seazn.club` — a real Auto-schedule on a real board, and
    confirm the per-solve log line comes from `placement-stg`.
@@ -313,7 +321,7 @@ rehearsal window (step 4b, "Deploying a contract change").
 **Deploys run in CI, from the published image. Nothing rebuilds it.** On every
 push to `main`, `.github/workflows/ci.yml` builds the image once, smoke-tests it in
 its `docker` job, and — after every gate — its `publish` job pushes that same image
-as `ghcr.io/onryde/seazn-placement:<commit sha>` (public; an immutable sha tag,
+as `ghcr.io/seazn-club/seazn-placement:<commit sha>` (public; an immutable sha tag,
 never `latest`). The two deploy workflows ship exactly that image, so what runs is
 the artifact the `docker` job proved starts and accepts a TCP connection, not a
 second build.
@@ -356,7 +364,7 @@ the workflow uses):
 
 ```bash
 fly deploy --config fly.toml --app placement-prod --no-public-ips \
-  --image ghcr.io/onryde/seazn-placement:<commit sha>
+  --image ghcr.io/seazn-club/seazn-placement:<commit sha>
 ```
 
 `fly.toml` pins `auto_stop_machines = "suspend"` with

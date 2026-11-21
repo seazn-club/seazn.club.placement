@@ -5,7 +5,7 @@
 #
 #   <tar>         the `docker` job's exported image (outputs: type=docker)
 #   <tested-tag>  the tag that image carries inside the tar (placement-service:ci)
-#   <image>       what to publish, ghcr.io/onryde/seazn-placement:<commit sha>
+#   <image>       what to publish, ghcr.io/seazn-club/seazn-placement:<commit sha>
 #
 # The publish job never rebuilds: a rebuild would resolve floating inputs again
 # (the base image tag, the build backend pip fetches to build the package; the
@@ -53,7 +53,7 @@ image="$3"
 # The label GHCR reads to link a new package to a repository, and the one value
 # it may have here: this repository (the Dockerfile and ci.yml set the same).
 label_key="org.opencontainers.image.source"
-source_url="https://github.com/onryde/seazn.club.placement"
+source_url="https://github.com/seazn-club/seazn.club.placement"
 
 # Reads `docker buildx imagetools inspect` output on stdin and prints its
 # `Digest:` value; fails when there is none.

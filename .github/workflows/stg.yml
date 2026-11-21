@@ -3,7 +3,7 @@ name: stg
 # Deploys the image ci.yml just tested to placement-stg. It does not build one.
 #
 # ci.yml, on every push to main, builds the image once, smoke-tests it and (after
-# every gate) publishes THAT image as ghcr.io/onryde/seazn-placement:<commit sha>.
+# every gate) publishes THAT image as ghcr.io/seazn-club/seazn-placement:<commit sha>.
 # When that run finishes green, this workflow deploys that commit's published
 # image: the bytes that were tested are the bytes that ship, and nothing here can
 # resolve a floating dependency or a base image tag a second time.
@@ -103,7 +103,7 @@ jobs:
       # github.sha is the latter. Values from the triggering run reach a script
       # only through env, never interpolated into a `run:` block.
       HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
-      IMAGE: ghcr.io/onryde/seazn-placement:${{ github.event.workflow_run.head_sha }}
+      IMAGE: ghcr.io/seazn-club/seazn-placement:${{ github.event.workflow_run.head_sha }}
     steps:
       # Check out the SAME commit the image was built from: fly.toml is read from
       # here, and a plain checkout on workflow_run would give the default branch.

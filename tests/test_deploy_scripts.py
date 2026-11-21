@@ -27,7 +27,10 @@ REQUIRE_MAIN_TIP = SCRIPTS / "require-main-tip.sh"
 
 SHA = "0123456789abcdef0123456789abcdef01234567"
 OTHER_SHA = "fedcba9876543210fedcba9876543210fedcba98"
-IMAGE = f"ghcr.io/onryde/seazn-placement:{SHA}"
+IMAGE = f"ghcr.io/seazn-club/seazn-placement:{SHA}"
+# The GitHub owner before the move to seazn-club. Assembled from pieces so
+# tests/test_repo_layout.py's old-owner sweep does not match this file.
+OLD_OWNER = "on" "ryde"
 DIGEST = "sha256:" + "ab" * 32
 
 # Fly's own address types (flyctl's `ips list --json`, key "Type"). A Flycast
@@ -136,19 +139,22 @@ def test_require_image_fails_when_the_registry_reports_no_digest(world):
 
 
 BAD_IMAGES = {
-    "latest": "ghcr.io/onryde/seazn-placement:latest",
-    "main": "ghcr.io/onryde/seazn-placement:main",
-    "empty-tag": "ghcr.io/onryde/seazn-placement:",
-    "no-tag": "ghcr.io/onryde/seazn-placement",
-    "short-sha": f"ghcr.io/onryde/seazn-placement:{SHA[:12]}",
-    "long-sha": f"ghcr.io/onryde/seazn-placement:{SHA}0",
-    "upper-case-sha": f"ghcr.io/onryde/seazn-placement:{SHA.upper()}",
-    "digest-only": f"ghcr.io/onryde/seazn-placement@{DIGEST}",
+    "latest": "ghcr.io/seazn-club/seazn-placement:latest",
+    "main": "ghcr.io/seazn-club/seazn-placement:main",
+    "empty-tag": "ghcr.io/seazn-club/seazn-placement:",
+    "no-tag": "ghcr.io/seazn-club/seazn-placement",
+    "short-sha": f"ghcr.io/seazn-club/seazn-placement:{SHA[:12]}",
+    "long-sha": f"ghcr.io/seazn-club/seazn-placement:{SHA}0",
+    "upper-case-sha": f"ghcr.io/seazn-club/seazn-placement:{SHA.upper()}",
+    "digest-only": f"ghcr.io/seazn-club/seazn-placement@{DIGEST}",
     "other-owner": f"ghcr.io/someone/seazn-placement:{SHA}",
+    # The package this repository published to before it moved to the seazn-club org.
+    # GitHub cannot move a package between owners, so its tags are not this image.
+    "old-owner": f"ghcr.io/{OLD_OWNER}/seazn-placement:{SHA}",
     "other-registry": f"registry.fly.io/placement:{SHA}",
-    "suffix": f"ghcr.io/onryde/seazn-placement:{SHA}-dirty",
-    "prefix": f"x-ghcr.io/onryde/seazn-placement:{SHA}",
-    "newline": f"ghcr.io/onryde/seazn-placement:{SHA}\n",
+    "suffix": f"ghcr.io/seazn-club/seazn-placement:{SHA}-dirty",
+    "prefix": f"x-ghcr.io/seazn-club/seazn-placement:{SHA}",
+    "newline": f"ghcr.io/seazn-club/seazn-placement:{SHA}\n",
 }
 
 
@@ -160,11 +166,11 @@ def test_require_image_refuses_anything_but_the_sha_tag_before_asking_the_regist
     assert _calls(world) == [], f"{name}: the registry was asked about a malformed reference: {_calls(world)}"
 
 
-# The rule a reference must satisfy is ghcr.io / onryde / seazn-placement : <40 lowercase
+# The rule a reference must satisfy is ghcr.io / seazn-club / seazn-placement : <40 lowercase
 # hex>, the whole string. Each clause below names the cases that break only it.
 REFERENCE_CLAUSES = {
     "registry is ghcr.io": {"other-registry", "prefix"},
-    "owner is onryde": {"other-owner"},
+    "owner is seazn-club": {"other-owner", "old-owner"},
     "a tag is present": {"no-tag", "empty-tag", "digest-only"},
     "the tag is a commit, not a name": {"latest", "main"},
     "the commit is all 40 characters": {"short-sha", "long-sha"},
