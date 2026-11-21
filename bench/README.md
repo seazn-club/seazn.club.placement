@@ -19,7 +19,7 @@ Full writeup, methodology, and the corrected findings (an earlier pass's
 optimistic result only held at `gapMinutes=0`; the realistic
 `gapMinutes>0` case needed a genuinely different model — interval
 variables + `AddNoOverlap` instead of a boolean fixture×slot grid) are in
-[`docs/superpowers/specs/2026-08-07-placement-scheduler-design.md`](https://github.com/onryde/seazn.club/blob/placement-split-base/docs/superpowers/specs/2026-08-07-placement-scheduler-design.md).
+[`docs/superpowers/specs/2026-08-07-placement-scheduler-design.md`](https://github.com/seazn-club/seazn.club/blob/placement-split-base/docs/superpowers/specs/2026-08-07-placement-scheduler-design.md).
 Read that first — this README is just "how to run it."
 
 ## Headline result

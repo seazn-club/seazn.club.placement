@@ -30,7 +30,7 @@ FROM python:3.14.6-slim-bookworm
 # (DEPLOY.md, §4). ci.yml passes the same label at build time; it is stated here
 # too so a build that drops --label cannot lose it, and scripts/publish-image.sh
 # refuses to push an image that does not carry it.
-LABEL org.opencontainers.image.source="https://github.com/onryde/seazn.club.placement"
+LABEL org.opencontainers.image.source="https://github.com/seazn-club/seazn.club.placement"
 
 WORKDIR /app
 

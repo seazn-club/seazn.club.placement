@@ -22,8 +22,8 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 WORKFLOWS_DIR = REPO_ROOT / ".github" / "workflows"
 JOB_HEADER = re.compile(r"^  ([a-z0-9-]+):[ \t]*$", re.MULTILINE)
 
-IMAGE_REPO = "ghcr.io/onryde/seazn-placement"
-SOURCE_LABEL = "org.opencontainers.image.source=https://github.com/onryde/seazn.club.placement"
+IMAGE_REPO = "ghcr.io/seazn-club/seazn-placement"
+SOURCE_LABEL = "org.opencontainers.image.source=https://github.com/seazn-club/seazn.club.placement"
 LABEL_KEY, _, SOURCE_URL = SOURCE_LABEL.partition("=")
 DOCKERFILE = REPO_ROOT / "Dockerfile"
 TAR_PATH = "${{ runner.temp }}/placement-image.tar"

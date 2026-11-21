@@ -38,7 +38,7 @@ WORKFLOWS_DIR = REPO_ROOT / ".github" / "workflows"
 SCRIPTS_DIR = REPO_ROOT / "scripts"
 JOB_HEADER = re.compile(r"^  ([a-z0-9-]+):[ \t]*$", re.MULTILINE)
 
-IMAGE_REPO = "ghcr.io/onryde/seazn-placement"
+IMAGE_REPO = "ghcr.io/seazn-club/seazn-placement"
 # superfly/flyctl-actions, tag v1 (the same commit as the tag 1.6). Resolved read-only
 # on 2026-10-25 with `gh api repos/superfly/flyctl-actions/git/ref/tags/v1`, a
 # lightweight tag (object.type == commit). The action's own `version` input defaults
@@ -908,8 +908,11 @@ def test_the_first_production_tag_is_gated_on_the_stg_auto_schedule_check():
 
 def test_the_ghcr_package_note_describes_the_recreated_package_not_the_old_link():
     # The package was deleted and recreated on 2026-10-25 and is linked to this repository. The note
-    # used to say its source "may still name another repository" (onryde/seazn.club); that is moot.
+    # used to say its source "may still name another repository" (the app repository); that is moot.
+    # Since the move to the seazn-club org the package is a NEW one (GitHub cannot move a package
+    # between owners), created by this repository's publish job, so the note looks it up there.
     text = _prose((REPO_ROOT / "DEPLOY.md").read_text())
-    assert "onryde/seazn.club.placement" in text and "deleted and recreated" in text
+    assert "seazn-club/seazn.club.placement" in text and "deleted and recreated" in text
+    assert "gh api orgs/seazn-club/packages/container/seazn-placement" in text
     for stale in ("may still name another repository", "fc5862f888", "feat/e2e-image-split", "is cosmetic"):
         assert stale not in text, stale

@@ -10,7 +10,7 @@ name: ci
 #                 it also keeps that exact image as a build artifact
 #   buf-breaking  proto/scheduler.proto is additive-only (AGENTS.md)
 #   publish       main only, after the three above: pushes THAT image, never a
-#                 rebuild, as ghcr.io/onryde/seazn-placement:<commit sha>
+#                 rebuild, as ghcr.io/seazn-club/seazn-placement:<commit sha>
 #
 # This file never deploys; deploy workflows are separate files.
 #
@@ -230,7 +230,7 @@ jobs:
           push: false
           outputs: type=docker,dest=${{ runner.temp }}/placement-image.tar
           tags: placement-service:ci
-          labels: org.opencontainers.image.source=https://github.com/onryde/seazn.club.placement
+          labels: org.opencontainers.image.source=https://github.com/seazn-club/seazn.club.placement
 
       - name: Load the built image
         run: docker load --input "$RUNNER_TEMP/placement-image.tar"
@@ -364,7 +364,7 @@ jobs:
 
   # ---------------------------------------------------------------------
   # The only job that writes anything. It pushes the one public image
-  # ghcr.io/onryde/seazn-placement:<commit sha>: web CI, e2e and bench in
+  # ghcr.io/seazn-club/seazn-placement:<commit sha>: web CI, e2e and bench in
   # seazn.club pull it anonymously. The tag is the immutable commit sha, never
   # `latest` or `main`.
   #
@@ -390,7 +390,7 @@ jobs:
       contents: read
       packages: write
     env:
-      IMAGE: ghcr.io/onryde/seazn-placement:${{ github.sha }}
+      IMAGE: ghcr.io/seazn-club/seazn-placement:${{ github.sha }}
     steps:
       # Only for scripts/publish-image.sh; nothing is built from this checkout.
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5

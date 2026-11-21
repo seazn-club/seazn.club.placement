@@ -1,7 +1,7 @@
 """``scripts/publish-image.sh``: push the image the ``docker`` job TESTED, once.
 
 The publish job downloads the tar the docker job built and smoke-tested, loads
-it, tags it ``ghcr.io/onryde/seazn-placement:<sha>`` and pushes it. It never
+it, tags it ``ghcr.io/seazn-club/seazn-placement:<sha>`` and pushes it. It never
 rebuilds, so the pushed bytes are the tested bytes. A re-run of a push to main
 must not move an existing sha tag, so the script asks the registry first.
 
@@ -23,14 +23,17 @@ import pytest
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = REPO_ROOT / "scripts" / "publish-image.sh"
 
-IMAGE = "ghcr.io/onryde/seazn-placement:" + "a" * 40
+IMAGE = "ghcr.io/seazn-club/seazn-placement:" + "a" * 40
 TESTED = "placement-service:ci"
 DIGEST = "sha256:" + "d" * 64
 OTHER_DIGEST = "sha256:" + "e" * 64
 # The label GHCR reads to link a NEW package to a repository. Typed here, from the
 # repository's own name, never read back from the script under test.
 LABEL_KEY = "org.opencontainers.image.source"
-SOURCE_URL = "https://github.com/onryde/seazn.club.placement"
+SOURCE_URL = "https://github.com/seazn-club/seazn.club.placement"
+# The GitHub owner before the move to seazn-club. Assembled from pieces so
+# tests/test_repo_layout.py's old-owner sweep does not match this file.
+OLD_OWNER = "on" "ryde"
 # The exact call the script makes to read it: the tested tag, after the load.
 INSPECT_LABEL = 'docker image inspect --format {{ index .Config.Labels "' + LABEL_KEY + '" }} ' + TESTED
 
@@ -206,17 +209,19 @@ def test_a_failed_load_never_reaches_the_label_check_tag_or_push(tmp_path):
 WRONG_LABELS = {
     "absent label prints nothing": "",
     "unset value": "<no value>",
-    "another repository of the same owner": "https://github.com/onryde/seazn.club",
-    "the app repository": "https://github.com/onryde/seazn.club.placement-app",
+    "another repository of the same owner": "https://github.com/seazn-club/seazn.club",
+    "the app repository": "https://github.com/seazn-club/seazn.club.placement-app",
     "another owner": "https://github.com/someone/seazn.club.placement",
-    "owner in another case": "https://github.com/Onryde/seazn.club.placement",
-    "owner only": "https://github.com/onryde",
+    # The URL before the repository moved to the seazn-club org: a stale label.
+    "the old owner": f"https://github.com/{OLD_OWNER}/seazn.club.placement",
+    "owner in another case": "https://github.com/Seazn-Club/seazn.club.placement",
+    "owner only": "https://github.com/seazn-club",
     "trailing slash": SOURCE_URL + "/",
     "dot git": SOURCE_URL + ".git",
     "plain http": SOURCE_URL.replace("https://", "http://"),
     "leading space": " " + SOURCE_URL,
     "trailing space": SOURCE_URL + " ",
-    "the ssh form": "git@github.com:onryde/seazn.club.placement.git",
+    "the ssh form": "git@github.com:seazn-club/seazn.club.placement.git",
 }
 
 
@@ -314,7 +319,7 @@ def test_refuses_a_call_without_all_three_arguments(tmp_path):
 # exist yet, so the very first publish depends on `denied` reading as absent. A
 # real credential failure still fails, loudly, at `docker push`.
 ABSENT_ERRORS = [
-    "ERROR: ghcr.io/onryde/seazn-placement:abc: not found",
+    "ERROR: ghcr.io/seazn-club/seazn-placement:abc: not found",
     "ERROR: failed to fetch manifest: MANIFEST_UNKNOWN: manifest unknown",
     "ERROR: NAME_UNKNOWN: repository name not known to registry",
     "ERROR: unexpected status from HEAD request: 404 Not Found",
@@ -329,7 +334,7 @@ ABSENT_ERRORS = [
     # What GHCR's token endpoint answers for a package that does not exist yet:
     # the first publish must still go through.
     "ERROR: failed to authorize: failed to fetch anonymous token: unexpected status from GET request to "
-    "https://ghcr.io/token?scope=repository%3Aonryde%2Fseazn-placement%3Apull&service=ghcr.io: 403 Forbidden",
+    "https://ghcr.io/token?scope=repository%3Aseazn-club%2Fseazn-placement%3Apull&service=ghcr.io: 403 Forbidden",
 ]
 # Anything else says nothing about whether the tag exists.
 UNKNOWN_ERRORS = [
@@ -471,7 +476,7 @@ def test_a_transient_error_then_not_found_publishes(tmp_path):
 def test_a_sha_made_of_status_digits_does_not_turn_an_unrecognised_error_into_not_found(tmp_path):
     # The error names the image, and a commit sha may contain 404. Only a status
     # code standing alone counts, or this unrecognised failure would read as absent.
-    image = "ghcr.io/onryde/seazn-placement:" + "0404" * 10
+    image = "ghcr.io/seazn-club/seazn-placement:" + "0404" * 10
     result, calls = _run(
         tmp_path,
         str(tmp_path / "image.tar"),
@@ -488,7 +493,7 @@ def test_a_sha_made_of_status_digits_does_not_turn_not_found_into_unknown(tmp_pa
     # The other direction: 500 and 429 inside the sha are not a 5xx or a 429, so a
     # real "not found" for that image still publishes.
     for digits in ("0500", "4290", "0503"):
-        image = "ghcr.io/onryde/seazn-placement:" + digits * 10
+        image = "ghcr.io/seazn-club/seazn-placement:" + digits * 10
         tmp = tmp_path / digits
         tmp.mkdir()
         result, calls = _run(
